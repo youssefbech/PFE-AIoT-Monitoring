@@ -1,8 +1,18 @@
+import argparse
+import os
 import pandas as pd
 
-file_path = "/mnt/c/Users/MSI/Downloads/bldc_predictive_maintenance_dataset (1) (1).csv"
-df = pd.read_csv(file_path)
+parser = argparse.ArgumentParser(description="Normalize and standardize a CSV dataset.")
+parser.add_argument("csv_path", nargs="?", default="bldc_predictive_maintenance_dataset (1) (1) (1).csv", help="Path to input CSV file (default: bldc_predictive_maintenance_dataset (1) (1) (1).csv)")
+args = parser.parse_args()
 
+file_path = args.csv_path
+if not os.path.isfile(file_path):
+    raise FileNotFoundError(
+        f"Input file not found: {file_path}\nPlease provide a valid CSV path. Example: python normalizationEtstandar.py train_data.csv"
+    )
+
+df = pd.read_csv(file_path)
 print(df.head())
 print(df.info())
 
@@ -53,6 +63,13 @@ print(X_standardized.head())
 
 X_standardized[target_column] = y
 X_standardized.to_csv("dataset_standardized.csv", index=False)
+
+
+import joblib
+
+# ... après avoir fait le fit_transform ...
+joblib.dump(scaler_standard, 'scaler.pkl')
+print("Scaler sauvegardé sous 'scaler.pkl'")
 
 #test
 
